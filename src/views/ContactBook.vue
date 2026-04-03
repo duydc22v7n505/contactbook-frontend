@@ -39,6 +39,17 @@
                     <i class="fas fa-address-card"></i>
                 </h4>
                 <ContactCard :contact="activeContact" />
+                
+                <router-link
+                    :to="{
+                        name: 'contact.edit',
+                        params: { id: activeContact._id },
+                    }"
+                >
+                    <span class="mt-2 badge badge-warning">
+                        <i class="fas fa-edit"></i> Hiệu chỉnh
+                    </span>
+                </router-link>
             </div>
         </div>
     </div>
@@ -64,14 +75,11 @@ export default {
         };
     },
     watch: {
-        
-    
         searchText() {
             this.activeIndex = -1;
         },
     },
     computed: {
-       
         contactStrings() {
             return this.contacts.map((contact) => {
                 const { name, email, address, phone } = contact;
@@ -92,13 +100,12 @@ export default {
             if (this.activeIndex < 0) return null;
             return this.filteredContacts[this.activeIndex];
         },
-        // Trả về số lượng liên hệ sau khi lọc.
+
         filteredContactsCount() {
             return this.filteredContacts.length;
         },
     },
     methods: {
-        // Lấy toàn bộ danh sách contact từ server.
         async retrieveContacts() {
             try {
                 this.contacts = await ContactService.getAll();
@@ -106,12 +113,12 @@ export default {
                 console.log(error);
             }
         },
-        // Làm mới danh sách và reset trạng thái chọn.
+
         refreshList() {
             this.retrieveContacts();
             this.activeIndex = -1;
         },
-        // Xóa toàn bộ liên hệ sau khi xác nhận.
+
         async removeAllContacts() {
             if (confirm("Bạn muốn xóa tất cả Liên hệ?")) {
                 try {
@@ -122,12 +129,11 @@ export default {
                 }
             }
         },
-        // Chuyển hướng sang trang thêm mới liên hệ.
+
         goToAddContact() {
             this.$router.push({ name: "contact.add" });
         },
     },
-    // Gọi hàm refreshList khi component được gắn vào DOM.
     mounted() {
         this.refreshList();
     },
